@@ -3,6 +3,8 @@
 # Copyright (c)  Rahul Bhadani, Arizona Board of Regents
 # All rights reserved.
 
-from .bagreader import bagreader
-from .bagreader import animate_timeseries
-from .bagreader import create_fig
+# from .bagreader import bagreader
+from .BagReader import *
+
+# from .bagreader import animate_timeseries
+# from .bagreader import create_fig

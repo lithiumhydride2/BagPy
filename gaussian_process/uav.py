@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from matplotlib import animation as animation
 
 
 class UAV:
@@ -16,9 +17,22 @@ class UAV:
         self.curr_index = 0  # 能够获取信息的索引
 
         if self.visualization:
-            self.setPlot()
-            self.figure = plt.figure(num="uav_{}".format(self.id))
-            self.ax = self.figure.add_subplot(111)
+            self.__init_plot()
+
+    def __init_plot(self):
+        self.setPlot()
+        self.figure = plt.figure(num="uav_{}".format(self.id))
+        self.ax = plt.axes()
+        self.ax.set_xlim(-6, 2)
+        self.ax.set_ylim(-6, 6)
+        self.ax.set_xlabel("X")
+        self.ax.set_ylabel("Y")
+        self.line = self.ax.plot([], [], linewidth=2)
+        # animation part
+        self.anim = animation.FuncAnimation(
+            self.figure,
+            animate,
+        )
 
     def setPlot(self):
         plt.style.use("default")
@@ -55,18 +69,12 @@ class UAV:
         self.curr_index = fake_ros_msg
 
     def __update_visualization(self):
-        self.ax.cla()
-        self.ax.set_xlim(-6, 2)
-        self.ax.set_ylim(-6, 6)
-        self.ax.set_xlabel("X")
-        self.ax.set_ylabel("Y")
         self.ax.plot(
-            self.pose.loc[: self.curr_index]["pose.position.x"],
-            self.pose.loc[: self.curr_index]["pose.position.y"],
+            self.pose.loc[self.curr_index]["pose.position.x"],
+            self.pose.loc[self.curr_index]["pose.position.y"],
             "r-",
         )
-        self.figure.canvas.draw()
-        plt.show()
+        pass
 
     def step(self, fake_ros_msg=None):
         if self.fake_ros:
